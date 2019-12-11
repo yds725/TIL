@@ -133,7 +133,7 @@
     ```bash
    $ git checkout master
    $ git merge feature/signout
-    ```
+   ```
 
    
 
@@ -272,6 +272,7 @@
     ```bash
     $ git add .
     $ git commit
+    ```
 ```
    
    * vim 편집기 화면이 나타납니다.
@@ -321,8 +322,8 @@
    |/
    * 87dd072 web
    
-    ```
-   
+```
+
    
 
 
@@ -332,3 +333,185 @@
  $ git branch -d hotfix/test
 ```
 
+
+
+## 4. 추가
+
+1. branch merge -no-ff {branch name}
+
+   ```bash
+   $ git merge -no-ff branch
+   ```
+
+   패스트 포워딩 상황에서 커밋을 억지로 발생시키기 브랜치 이력을 유지할 수 잇음
+
+   
+
+2. Branch rebase 
+
+3. Commit
+
+   `commit를 통해 이력이 확정하면 해쉬값이 부여되면 이 값을 통해 커밋인지를 확인`
+
+   워킹 디렉토리 변화 없고 스테이징 에리어 변화 없고 변경사항 없음
+
+   ```bash
+   $ git commit 
+   noting to commit, working tree clean
+   ```
+
+   ```bash
+   $ git commit
+   ```
+
+4. commit 메세지 작성
+
+   부제 vim 활요
+
+   ```bash
+   $ git commit
+   ```
+
+   * 편집모드 (i)
+     * 문서 폅징
+   * 명령모
+     * dd: 해당 줄 삭제
+     * :wq - 저장 및 종료
+       * w: write(저장)
+       * q: quit(종료
+     * :q! - 강제 종료
+       * ! - 강제로 뭐해라
+
+    log 활용 명령어
+
+   ```bash
+   $ git log
+   $ git log --oneline
+   $ git log -1 (해당 개수?)
+   $ git log -1 --oneline
+   $ git log --oneline --graph
+   ```
+
+   HEAD: 현재 작업하고 있는 커밋 이력 및 브랜치에 대한 포인터
+
+   ```bash
+   a26b82b (HEAD -> master)
+   # current points to master branch
+   ```
+
+   
+
+   직전 커밋 메세지 수정
+
+   ` 아래의 명령어는 커밋 이력을 변경(기존에 있던 걸 대체)하기 때문에 조심해야 한다. 공개된 저장소에 (원격 저장소) 이미 푸시된 이력이라면 절대 해선느 안된다`
+
+   ```bash
+   $ git commit --amend
+   ```
+
+   ## 커밋시 특정 파일을 빠뜨렷을 떄
+
+   만약 staging area에 특정 파일 (omit_file.txt)을 올리지 않아서 커밋이 되지 않았을 때!
+
+   커밋메시지 작성후 저장 사진이 찍힌다?
+
+   ```bash
+   $ git add .(specific file)
+   $ git commit --aend
+   ```
+
+## Staging area
+
+* 커밋 이력이 있는 파일을 수정한 경우
+
+  ```bash
+  $ git status
+  On branch master
+  Your branch is ahead of 'origin/master' by 8 commits.
+    (use "git push" to publish your local commits)
+  
+  Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git restore <file>..." to discard changes in working directory)
+          modified:   txt1.txt
+  
+  no changes added to commit (use "git add" and/or "git commit -a")
+  ```
+
+* commit history 없는 파일 경우
+
+  ```bash
+  $ git status
+  On branch master
+  Your branch is ahead of 'origin/master' by 8 commits.
+    (use "git push" to publish your local commits)
+  
+  Changes not staged for commit:
+    # staged 하게 하기 위한
+    (use "git add <file>..." to update what will be committed)
+    
+    (use "git restore <file>..." to discard changes in working directory)
+          modified:   txt1.txt
+  
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+          holy.txt
+  
+  no changes added to commit (use "git add" and/or "git commit -a")
+  
+  ```
+
+  ```bash
+  $ git status
+  On branch master
+  Your branch is ahead of 'origin/master' by 8 commits.
+    (use "git push" to publish your local commits)
+  
+  Changes to be committed:
+  # unstage 하기 위해
+    (use "git restore --staged <file>..." to unstage)
+          new file:   holy.txt
+  
+  ```
+
+  add 취소하기
+
+  ```bash
+  $ git restore --staged <file>
+  ```
+
+  * 구버전은
+  *  $ git reset head <file>
+
+  Working dir 변화 삭제
+
+  ```bash
+  git 모든 commit 내용은 되돌릴 수 있다
+  다만 아래 의 WD 내용은 삭제하는 것은 되돌릴 수 없다
+  ```
+
+  $ git restore <file>
+
+  구버전은 $ git checkout -- <file>
+
+## 예시 상황
+
+1. 브랜치에서 파일 변경후 커밋
+2. 마스터 브랜치에서 파일 수정 (add / commit x)
+3. merge
+
+```bash
+$ git merge test
+```
+
+## reset vs revert
+
+` commit이력을 되돌리는 작업을 한다`
+
+* reset: 이력을 삭제한다. 
+  * 워킹디렉토리 상태로 되돌아간다; 수정된 내용은 유지한 채로 add이전 상태로 되돌아간다
+  * --hard: 워킹 디렉토리의 내용까지 바꿈?
+  * 노 옵션 : 워킹 디렉토리 는 유지하고 이력만 삭제
+  * --soft: add까지 진행된 staging area까지 적용되는 상태; 커밋 이력은 삭제 
+* revert: 되돌렸다는 이력을 남긴다
+* 
